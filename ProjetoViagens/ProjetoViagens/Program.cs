@@ -1,4 +1,6 @@
-﻿using ProjetoViagens.DB.Base;
+﻿using ProjetoViagens.Data;
+using ProjetoViagens.DB.Base;
+using ProjetoViagens.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,50 +16,145 @@ namespace ProjetoViagens
         static void Main(string[] args)
         {
             string opcaoMenu = "";
-            string opcaoMenuCad = "";
-            string opcaoMenuCons = "";
 
             do
             {
-                Menu();
-                opcaoMenu = Console.ReadLine();
+                opcaoMenu = Menu();
                 if (opcaoMenu == "1")
                 {
-                    MenuCadastro();
-                    opcaoMenuCad = Console.ReadLine();
-                    if (opcaoMenuCad == "1")
+                    if (MenuCadastro() == "1")
                     {
-
+                        CadastarPlaneta();
                     }
                 }
                 else if (opcaoMenu == "2")
                 {
-                    MenuConsulta();
-                    opcaoMenuCons = Console.ReadLine();
-                    if (opcaoMenuCons == "1")
+                    string opcaoMenuConsulta = MenuConsulta();
+                    if (opcaoMenuConsulta == "1")
                     {
-                        string Conn = ConfigurationManager.ConnectionStrings["ViagensInterplanetariasDB"].ConnectionString;
-                        SqlConnection DBConn = new SqlConnection(Conn);
-                        DBConn.Open();
-                        SqlCommand command = new SqlCommand("SELECT * FROM Planetas", DBConn);
-                        SqlDataReader reader = command.ExecuteReader();
+                        MenuConsultaOpcao<Planetas>("Planeta", "planetasTodos_sps", "planetasPorNome_sps");
+                    }
+                    else if (opcaoMenuConsulta == "2")
+                    {
+                        MenuConsultaOpcao<Especies>("Cliente", "ClientesTodos_sps", "clientesPorNome_sps");
+                    }
+                    else if (opcaoMenuConsulta == "3")
+                    {
 
-                        while (reader.Read())
-                        {
-                            Console.WriteLine("{0} - Nome: {1} \nDescrição: {2} \nTem Oxigenio: {3}", reader.GetSqlInt32(0), 
-                                reader.GetSqlString(1), reader.GetSqlString(2), reader.GetSqlBoolean(3) == true ? "Sim" : "Não");
-                            Console.WriteLine("");
-                        }
-                        Console.ReadKey();
+                    }
+                    else if (opcaoMenuConsulta == "4")
+                    {
+
                     }
                 }
             } while (opcaoMenu.ToLower() != "x");
 
-
-
         }
 
-        private static void MenuConsulta()
+        private static void MenuConsultaOpcao<T>(string nomeConsulta, string proc1, string proc2)
+        {
+           string opcaoConsultar = HeaderOpcaoConsultar(nomeConsulta);
+            if (opcaoConsultar == "1")
+            {
+                MostrarConsulta<T>(nomeConsulta, proc1, null);
+            }
+            else if (opcaoConsultar == "2")
+            {               
+                Console.WriteLine("Qual o nome do(a) {0}?", nomeConsulta);
+                string nome = Console.ReadLine();
+
+                List<SqlParameter> parametros = new List<SqlParameter>();
+                parametros.Add(new SqlParameter("@Nome", nome));
+
+                MostrarConsulta<T>(nomeConsulta, proc2, parametros);
+            }
+        }
+
+        private static void MostrarConsulta<T>(string nomeConsulta, string procedure, List<SqlParameter> parametros)
+        {
+            Repository<T> repo = new Repository<T>();
+            SqlDataReader reader = null;
+
+            if (parametros != null)
+            {
+                reader = repo.ExecuteProc(procedure, parametros);
+            }
+            else
+            {
+                reader = repo.ExecuteProc(procedure);
+            }
+            
+
+            while (reader.Read())
+            {
+                if (nomeConsulta == "Planeta")
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Nome: {0} | Descrição: {1} \nTem Oxigenio: {2}", reader.GetSqlString(0), reader.GetSqlString(1),
+                        reader.GetSqlBoolean(2) == true ? "Sim" : "Não");
+                }
+                else if (nomeConsulta == "Cliente")
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Id: {0} - Nome: {1} | Documento: {2} | Cor: {3} | Qtde Braços: {4} | " +
+                        "Qtde Pernas: {5} | Qtde Cabeças: {6} | Respira? {7}", reader.GetSqlInt32(0), reader.GetSqlString(1), 
+                        reader.GetSqlString(2), reader.GetSqlString(3), reader.GetSqlInt32(4), reader.GetSqlInt32(5), reader.GetSqlInt32(6),
+                        reader.GetSqlBoolean(7) == true ? "Sim" : "Não");
+                }
+                
+            }
+
+            Console.ReadKey();
+        }
+
+        private static string HeaderOpcaoConsultar(string elem)
+        {
+            Console.WriteLine("Menu 2-1 - Consultar " + elem);
+            Console.WriteLine("*****************************************");
+            Console.WriteLine("1 - Consultar todos(as) os(as) {0}s", elem);
+            Console.WriteLine("2 - Consultar pelo nome do(a) {0}", elem);
+            return Console.ReadLine();
+        }
+
+        private static void CadastarPlaneta()
+        {
+            Console.WriteLine("Menu 1-1 - Cadastrar Planeta");
+            Console.WriteLine("******************");
+            Console.WriteLine("");
+
+            Console.WriteLine("Digite o nome do planeta?");
+            string nomePlaneta = Console.ReadLine();
+
+            Console.WriteLine("Escreva a descrição do planeta?");
+            string descPlaneta = Console.ReadLine();
+
+            Console.WriteLine("Esse planeta possui oxigenio? (s/n)");
+            string possuiOxigenio = Console.ReadLine();
+
+            bool convPossuiOxigenio = possuiOxigenio.ToLower() == "s" ? true : false;
+
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@Nome", nomePlaneta));
+            parametros.Add(new SqlParameter("@Descricao", descPlaneta));
+            parametros.Add(new SqlParameter("@PossuiOxigenio", convPossuiOxigenio));
+            MostrarInserir<Planetas>("planetas_spi", parametros);
+        }
+
+        private static void MostrarInserir<T>(string procedure, List<SqlParameter> parametros)
+        {
+            Repository<T> repo = new Repository<T>();
+            SqlDataReader reader = repo.ExecuteProc(procedure, parametros);
+
+            Console.WriteLine("******************");
+            while (reader.Read())
+            {
+                Console.WriteLine(reader.GetValue(0));
+            }
+
+            Console.ReadKey();
+        }
+
+        private static string MenuConsulta()
         {
             Header();
             Console.WriteLine("Menu 2 - Consulta");
@@ -67,9 +164,10 @@ namespace ProjetoViagens
             Console.WriteLine("3 - Consultar Transporte");
             Console.WriteLine("4 - Consultar Viagem");
             Console.WriteLine("v - Voltar");
+            return Console.ReadLine();
         }
 
-        private static void MenuCadastro()
+        private static string MenuCadastro()
         {
             Header();
             Console.WriteLine("Menu 1 - Cadastro");
@@ -79,6 +177,7 @@ namespace ProjetoViagens
             Console.WriteLine("3 - Cadastrar Transporte");
             Console.WriteLine("4 - Cadastrar Viagem");
             Console.WriteLine("v - Voltar");
+            return Console.ReadLine();
         }
 
         private static void Header()
@@ -89,7 +188,7 @@ namespace ProjetoViagens
             Console.WriteLine("");
         }
 
-        private static void Menu()
+        private static string Menu()
         {
             Header();
             Console.WriteLine("Menu");
@@ -97,6 +196,7 @@ namespace ProjetoViagens
             Console.WriteLine("1 - Cadastro");
             Console.WriteLine("2 - Consulta");
             Console.WriteLine("x - Encerrar");
+            return Console.ReadLine();
         }
     }
 }

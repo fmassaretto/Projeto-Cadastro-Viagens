@@ -44,16 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\Base\Connection.cs" />
+    <Compile Include="Data\Base\Connection.cs" />
+    <Compile Include="Data\Interfaces\ICrud.cs" />
+    <Compile Include="Data\Repository.cs" />
+    <Compile Include="Model\Especies.cs" />
+    <Compile Include="Model\Interface\ICliente.cs" />
+    <Compile Include="Model\Planetas.cs" />
+    <Compile Include="Model\Transportes.cs" />
+    <Compile Include="Model\Viagens.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DB\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
