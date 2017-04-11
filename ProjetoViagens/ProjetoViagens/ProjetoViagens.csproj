@@ -45,13 +45,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Base\Connection.cs" />
+    <Compile Include="Data\Base\CrudAbstract.cs" />
+    <Compile Include="Data\BookingRepository.cs" />
+    <Compile Include="Data\ClienteRepository.cs" />
     <Compile Include="Data\Interfaces\ICrud.cs" />
+    <Compile Include="Data\PlanetaRepository.cs" />
     <Compile Include="Data\Repository.cs" />
-    <Compile Include="Model\Especies.cs" />
-    <Compile Include="Model\Interface\ICliente.cs" />
+    <Compile Include="Data\ViagemDiponivelRepository.cs" />
+    <Compile Include="Model\Clientes.cs" />
+    <Compile Include="Model\DTO\ViagemCliente.cs" />
+    <Compile Include="Model\Interface\IEspecies.cs" />
     <Compile Include="Model\Planetas.cs" />
     <Compile Include="Model\Transportes.cs" />
-    <Compile Include="Model\Viagens.cs" />
+    <Compile Include="Model\ViagensDispo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
