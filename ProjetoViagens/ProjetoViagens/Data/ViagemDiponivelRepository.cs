@@ -23,19 +23,33 @@ namespace ProjetoViagens.Data
 
         public override ViagensDispo Incluir(ViagensDispo entidade, string procedure)
         {
-            throw new NotImplementedException();
+            SqlCommand comando = base.GetSqlCommand(procedure);
+
+            comando.Parameters.AddWithValue("@PlanetaOrigem", entidade.PlanetaOrigem);
+            comando.Parameters.AddWithValue("@PlanetaDestino", entidade.PlanetaDestino);
+            comando.Parameters.AddWithValue("@Valor", entidade.Valor);
+            comando.Parameters.AddWithValue("@Tempo", entidade.Tempo);
+
+            SqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine("");
+                Console.WriteLine("********************************");
+                Console.WriteLine(reader["msgSucesso"]);
+                Console.WriteLine("********************************");
+                Console.WriteLine("");
+            }
+
+            return entidade;
         }
 
         public override List<ViagensDispo> Listar(string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
+            SqlCommand comando = base.GetSqlCommand(procedure);
 
             List<ViagensDispo> listaViagens = new List<ViagensDispo>();
 
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
             SqlDataReader reader = comando.ExecuteReader();
 
             while (reader.Read())
@@ -59,14 +73,9 @@ namespace ProjetoViagens.Data
 
         public List<ViagensDispo> ObterViagens(string nome, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
+            SqlCommand comando = base.GetSqlCommand(procedure);
 
             List<ViagensDispo> listaViagens = new List<ViagensDispo>();
-
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
 
             comando.Parameters.AddWithValue("@Nome", nome);
             SqlDataReader reader = comando.ExecuteReader();
