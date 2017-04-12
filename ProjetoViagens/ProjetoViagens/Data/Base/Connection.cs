@@ -19,5 +19,16 @@ namespace ProjetoViagens.DB.Base
             return Conn;          
         }
 
+        public SqlCommand GetSqlCommand(string procedure)
+        {
+            SqlCommand comando = new SqlCommand();
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.CommandText = procedure;
+            comando.Connection = GetConnection();
+            comando.Connection.Open();
+            
+            return comando;
+        }
+
     }
 }
