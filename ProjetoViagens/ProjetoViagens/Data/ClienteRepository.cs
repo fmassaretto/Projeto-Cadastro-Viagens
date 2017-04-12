@@ -100,11 +100,12 @@ namespace ProjetoViagens.Data
         }
         public override List<Clientes> Listar(string procedure)
         {
+            List<Clientes> listaClientes = new List<Clientes>();
             SqlCommand comando = new SqlCommand();
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.CommandText = procedure;
 
-            List<Clientes> listaClientes = new List<Clientes>();
+            
 
             comando.Connection = base.GetConnection();
             comando.Connection.Open();

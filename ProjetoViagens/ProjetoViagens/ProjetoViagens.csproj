@@ -52,6 +52,15 @@
     <Compile Include="Data\PlanetaRepository.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\ViagemDiponivelRepository.cs" />
+    <Compile Include="Menus\HeaderAbstract.cs" />
+    <Compile Include="Menus\MenuAtualizar.cs" />
+    <Compile Include="Menus\MenuBooking.cs" />
+    <Compile Include="Menus\MenuCadastrar.cs" />
+    <Compile Include="Menus\MenuConsultar.cs" />
+    <Compile Include="Menus\MenuBookingConsultar.cs" />
+    <Compile Include="Menus\MenuExcluir.cs" />
+    <Compile Include="Menus\MenuConsultarOpcao.cs" />
+    <Compile Include="Menus\MenuPrincipal.cs" />
     <Compile Include="Model\Clientes.cs" />
     <Compile Include="Model\DTO\ViagemCliente.cs" />
     <Compile Include="Model\Interface\IEspecies.cs" />

@@ -1,5 +1,6 @@
 ﻿using ProjetoViagens.Data;
 using ProjetoViagens.DB.Base;
+using ProjetoViagens.Menus;
 using ProjetoViagens.Model;
 using ProjetoViagens.Model.DTO;
 using System;
@@ -20,10 +21,11 @@ namespace ProjetoViagens
 
             do
             {
-                opcaoMenuPrincipal = MenuPrincipal();
+                opcaoMenuPrincipal = MenuPrincipal.ShowMenuPrincipal();
+                //opcaoMenuPrincipal = MenuPrincipal();
                 if (opcaoMenuPrincipal == "1")
                 {
-                    string opcaoMenuCadastro = MenuCadastro();
+                    string opcaoMenuCadastro = MenuCadastrar.ShowMenuCadastrar();
                     if (opcaoMenuCadastro == "1")
                     {
                         //CADASTRAR PLANETA
@@ -47,7 +49,7 @@ namespace ProjetoViagens
                 }
                 else if (opcaoMenuPrincipal == "2")
                 {
-                    string opcaoMenuConsulta = MenuConsulta();
+                    string opcaoMenuConsulta = MenuConsultar.ShowMenuConsultar();
                     if (opcaoMenuConsulta == "1")
                     {
                         //CONSULTAR PLANETA
@@ -70,7 +72,7 @@ namespace ProjetoViagens
                 }
                 else if (opcaoMenuPrincipal == "3")
                 {
-                    string opcaoMenuConsulta = MenuAtualizar();
+                    string opcaoMenuConsulta = MenuAtualizar.ShowMenuAtualizar();
                     if (opcaoMenuConsulta == "1")
                     {
                         //ATUALIZAR PLANETA
@@ -92,7 +94,7 @@ namespace ProjetoViagens
                 }
                 else if (opcaoMenuPrincipal == "4")
                 {
-                    string opcaoMenuConsulta = MenuExcluir();
+                    string opcaoMenuConsulta = MenuExcluir.ShowMenuExcluir();
                     if (opcaoMenuConsulta == "1")
                     {
                         //EXCLUIR PLANETA
@@ -115,27 +117,28 @@ namespace ProjetoViagens
                 else if (opcaoMenuPrincipal == "5")
                 {
                     //BOOKING DA VIAGEM
-                    string opcaoMenuBooking = MenuBooking();
+                    string opcaoMenuBooking = MenuBooking.ShowMenuBooking();
                     if (opcaoMenuBooking == "1")
                     {
                         //FAZER BOOKING
-                        ViagemCliente viagemCliente = new ViagemCliente();
-                        Console.WriteLine("Informe o ID do Cliente:");
-                        viagemCliente.IdCliente = Convert.ToInt32(Console.ReadLine());
-
-                        Console.WriteLine("#################################### VIAGENS DISPONÍVEIS ###################################");
-                        Console.WriteLine("############################################################################################");
-                        ConsultaTodasViagensDisponiveis();
-                        Console.WriteLine("############################################################################################");
-                        Console.WriteLine("");
-
-                        Console.WriteLine("Informe o ID da Viagem Disponível:");
-                        viagemCliente.IdViagemDispo = Convert.ToInt32(Console.ReadLine());
-                        Console.ReadKey();
+                        FazerBooking();
                     }
                     else if (opcaoMenuBooking == "2")
                     {
                         //CONSULTAR BOOKING
+                        string opcaoConsultaBoooking = MenuBookingConsultar.ShowMenuConsultarooking();
+                        if (opcaoConsultaBoooking == "1")
+                        {
+                            //CONSULTAR BOOKING OPCAO 1
+                            ConsultaBookingTodos();
+                        }
+                        else if (opcaoConsultaBoooking == "2")
+                        {
+                            //CONSULTAR BOOKING OPCAO 2
+                            ConsultaBookingPorId();
+
+                        }
+                        Console.ReadKey();
 
                     }
                     else if (opcaoMenuBooking == "3")
@@ -151,19 +154,64 @@ namespace ProjetoViagens
 
         }
 
-        private static string MenuBooking()
+        private static void ConsultaBookingPorId()
         {
-            Header();
-            Console.WriteLine("Menu 5 - Booking da Viagem");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Fazer Booking");
-            Console.WriteLine("2 - Consultar Booking");
-            Console.WriteLine("3 - Atualizar Booking");
-            Console.WriteLine("4 - Excluir Booking");
-            Console.WriteLine("v - Voltar");
-            return Console.ReadLine();
+            Console.WriteLine("Qual o ID do Cliente?");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            bool cond = true;
+            BookingRepository repoBooking = new BookingRepository();
+            foreach (var item in repoBooking.ObterPorId(id, "viagemClientePorId_sps"))
+            {
+                if (cond == true)
+                    Console.WriteLine("O Cliente: {0}, tem as seguintes reservas:", item.clientes.Nome);
+
+                Console.WriteLine("Codigo da Reserva: {0} - (De: {1} - Para: {2}) Valor: ${3} - Distancia: {4} Anos-Luz",
+                    item.Id, item.PlanetaOrigem, item.PlanetaDestino, item.Valor,
+                    item.Tempo);
+                Console.WriteLine("");
+                cond = false;
+            }
         }
 
+        private static void FazerBooking()
+        {
+            ViagemCliente viagemCliente = new ViagemCliente();
+            Console.WriteLine("Informe o ID do Cliente:");
+            viagemCliente.IdCliente = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("#################################### VIAGENS DISPONÍVEIS ###################################");
+            Console.WriteLine("############################################################################################");
+            ConsultaTodasViagensDisponiveis();
+            Console.WriteLine("############################################################################################");
+            Console.WriteLine("");
+
+            Console.WriteLine("Informe o ID da Viagem Disponível:");
+            viagemCliente.IdViagemDispo = Convert.ToInt32(Console.ReadLine());
+
+            BookingRepository repoBooking = new BookingRepository();
+
+            repoBooking.Incluir(viagemCliente, "viagemCliente_spi");
+            Console.ReadKey();
+        }
+
+        private static void ConsultaBookingTodos()
+        {
+            BookingRepository repoBooking = new BookingRepository();
+
+            Console.WriteLine("*****************************CONSULTA RESERVA********************************************");
+            foreach (var item in repoBooking.Listar("viagemClienteTodos_sps"))
+            {
+                Console.WriteLine("*****************************************************************************************");
+                Console.WriteLine("Codigo da Reserva: {0} - Cliente: {1} | Dodumento: {2}", item.Id, item.clientes.Nome,
+                    item.clientes.Documento);
+                Console.WriteLine("De: {0} - Para: {1} | Valor: ${2} - Distancia: {3} Anos-Luz", item.PlanetaOrigem,
+                    item.PlanetaDestino, item.Valor, item.Tempo);
+                Console.WriteLine("");
+            }
+        }
+
+        #region ExcluiPlaneta
         private static void ExcluiPlaneta()
         {
             Console.WriteLine("Informe o ID do Planeta para excluir:");
@@ -184,7 +232,8 @@ namespace ProjetoViagens
             }
 
             Console.ReadKey();
-        }
+        } 
+        #endregion
 
         #region AtualizarPlaneta
         private static void AtualizaPlaneta()
@@ -307,7 +356,7 @@ namespace ProjetoViagens
         #region MenuConsultaOpcao
         private static void MenuConsultaOpcao(string nomeEntidade)
         {
-            string opcaoConsultar = HeaderOpcaoConsultar(nomeEntidade);
+            string opcaoConsultar =  MenuConsultarOpcao.ShowMenuOpcaoConsultar(nomeEntidade);
             if (opcaoConsultar == "1")
             {
                 if (nomeEntidade.ToLower() == "planeta")
@@ -389,7 +438,9 @@ namespace ProjetoViagens
                 Console.ReadKey();
             }
         }
+        #endregion
 
+        #region ConsultaTodasViagensDisponiveis
         private static void ConsultaTodasViagensDisponiveis()
         {
             ViagemDiponivelRepository repoViagem = new ViagemDiponivelRepository();
@@ -401,6 +452,9 @@ namespace ProjetoViagens
                 Console.WriteLine("*********************************************************************");
             }
         }
+        #endregion
+
+        #region         private static void MostraConsultaClientePorNome(string nome)
 
         private static void MostraConsultaClientePorNome(string nome)
         {
@@ -412,7 +466,7 @@ namespace ProjetoViagens
             Console.WriteLine("Cor: {0} | {1} Braço(s) | {2} Perna(s) | {3} Cabeça(s)", cliente.Cor, cliente.QtdBracos, cliente.QtdPernas, cliente.QtdCabecas);
             Console.WriteLine("Respira? {0}", cliente.Respira == true ? "Sim" : "Não");
             Console.WriteLine("*********************************************************************");
-        }
+        } 
         #endregion
 
         #region MostraConsultaPorNome
@@ -426,17 +480,6 @@ namespace ProjetoViagens
             Console.WriteLine("Descrição: {0}", planeta.Descricao);
             Console.WriteLine("Possui Oxiênio? {0}", planeta.PossuiOxigenio == true ? "Sim" : "Não");
             Console.WriteLine("*********************************************************************");
-        }
-        #endregion
-
-        #region HeaderOpcaoConsultar
-        private static string HeaderOpcaoConsultar(string elem)
-        {
-            Console.WriteLine("Menu 2-1 - Consultar " + elem);
-            Console.WriteLine("*****************************************");
-            Console.WriteLine("1 - Consultar todos(as) os(as) {0}s", elem);
-            Console.WriteLine("2 - Consultar pelo nome do(a) {0}", elem);
-            return Console.ReadLine();
         }
         #endregion
 
@@ -481,79 +524,5 @@ namespace ProjetoViagens
         } 
         #endregion
 
-        private static string MenuConsulta()
-        {
-            Header();
-            Console.WriteLine("Menu 2 - Consultar");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Consultar Planeta");
-            Console.WriteLine("2 - Consultar Cliente");
-            Console.WriteLine("3 - Consultar Transporte");
-            Console.WriteLine("4 - Consultar Viagens Disponiveis");
-            Console.WriteLine("v - Voltar");
-            return Console.ReadLine();
-        }
-
-        private static string MenuCadastro()
-        {
-            Header();
-            Console.WriteLine("Menu 1 - Cadastro");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Cadastrar Planeta");
-            Console.WriteLine("2 - Cadastrar Cliente");
-            Console.WriteLine("3 - Cadastrar Transporte");
-            Console.WriteLine("4 - Cadastrar Viagem Disponível");
-            Console.WriteLine("v - Voltar");
-            return Console.ReadLine();
-        }
-
-        private static string MenuAtualizar()
-        {
-            Header();
-            Console.WriteLine("Menu 3 - Atualizar");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Atualizar Planeta");
-            Console.WriteLine("2 - Atualizar Cliente");
-            Console.WriteLine("3 - Atualizar Transporte");
-            Console.WriteLine("4 - Atualizar Viagem");
-            Console.WriteLine("v - Voltar");
-            return Console.ReadLine();
-        }
-
-        private static string MenuExcluir()
-        {
-            Header();
-            Console.WriteLine("Menu 4 - Excluir");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Excluir Planeta");
-            Console.WriteLine("2 - Excluir Cliente");
-            Console.WriteLine("3 - Excluir Transporte");
-            Console.WriteLine("4 - Excluir Viagem");
-            Console.WriteLine("v - Voltar");
-            return Console.ReadLine();
-        }
-        private static void Header()
-        {
-            Console.Clear();
-            Console.WriteLine("Bem vindo ao Sistema de Viagens Interplanetárias!");
-            Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine("");
-        }
-
-        private static string MenuPrincipal()
-        {
-            Header();
-            Console.WriteLine("Menu");
-            Console.WriteLine("******************");
-            Console.WriteLine("1 - Cadastrar");
-            Console.WriteLine("2 - Consultar");
-            Console.WriteLine("3 - Atualizar");
-            Console.WriteLine("4 - Excluir");
-            Console.WriteLine("******************");
-            Console.WriteLine("5 - Fazer Booking da Viagem");
-            Console.WriteLine("");
-            Console.WriteLine("x - Encerrar");
-            return Console.ReadLine();
-        }
     }
 }
