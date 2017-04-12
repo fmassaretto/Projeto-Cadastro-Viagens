@@ -48,7 +48,6 @@
     <Compile Include="Data\Base\CrudAbstract.cs" />
     <Compile Include="Data\BookingRepository.cs" />
     <Compile Include="Data\ClienteRepository.cs" />
-    <Compile Include="Data\Interfaces\ICrud.cs" />
     <Compile Include="Data\PlanetaRepository.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\ViagemDiponivelRepository.cs" />

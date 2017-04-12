@@ -1,5 +1,4 @@
-﻿using ProjetoViagens.Data.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,7 @@ using ProjetoViagens.DB.Base;
 
 namespace ProjetoViagens.Data
 {
-    class Repository<T> : Connection, ICrud
+    class Repository<T> : Connection
     {
         public SqlDataReader ExecuteProc(string query, List<SqlParameter> parametros)
         {
