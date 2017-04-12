@@ -22,7 +22,6 @@ namespace ProjetoViagens
             do
             {
                 opcaoMenuPrincipal = MenuPrincipal.ShowMenuPrincipal();
-                //opcaoMenuPrincipal = MenuPrincipal();
                 if (opcaoMenuPrincipal == "1")
                 {
                     string opcaoMenuCadastro = MenuCadastrar.ShowMenuCadastrar();
@@ -44,7 +43,25 @@ namespace ProjetoViagens
                     else if (opcaoMenuCadastro == "4")
                     {
                         //CADASTRAR VIAGEM
+                        ViagensDispo viagemDispo = new ViagensDispo();
+                        ViagemDiponivelRepository repoViagemDispo = new ViagemDiponivelRepository();
 
+                        Console.WriteLine("");
+                        Console.WriteLine("Informe o planeta de origem:");
+                        viagemDispo.PlanetaOrigem = Console.ReadLine();
+
+                        Console.WriteLine("Informe o planeta de destino:");
+                        viagemDispo.PlanetaDestino = Console.ReadLine();
+
+                        Console.WriteLine("Informe o valor da viagem:");
+                        viagemDispo.Valor = Convert.ToInt32(Console.ReadLine());
+
+                        Console.WriteLine("Informe a distancia da viagem: (Anos-Luz)");
+                        viagemDispo.Tempo = Convert.ToInt32(Console.ReadLine());
+
+                        repoViagemDispo.Incluir(viagemDispo, "viagemDispo_spi");
+
+                        Console.ReadKey();
                     }
                 }
                 else if (opcaoMenuPrincipal == "2")
@@ -67,7 +84,7 @@ namespace ProjetoViagens
                     else if (opcaoMenuConsulta == "4")
                     {
                         //CONSULTAR VIAGEM DISPONIVEIS
-                        MenuConsultaOpcao("viagem"); 
+                        MenuConsultaOpcao("viagem");
                     }
                 }
                 else if (opcaoMenuPrincipal == "3")
@@ -103,7 +120,7 @@ namespace ProjetoViagens
                     else if (opcaoMenuConsulta == "2")
                     {
                         //EXCLUIR CLIENTE
-                        
+
                     }
                     else if (opcaoMenuConsulta == "3")
                     {
@@ -211,28 +228,69 @@ namespace ProjetoViagens
             }
         }
 
-        #region ExcluiPlaneta
-        private static void ExcluiPlaneta()
+        #region CadastrarCliente
+        private static void CadastrarCliente()
         {
-            Console.WriteLine("Informe o ID do Planeta para excluir:");
-            int id = Convert.ToInt32(Console.ReadLine());
+            ClienteRepository repoCliente = new ClienteRepository();
 
-            Console.WriteLine("Tem certeza que deseja excluir? (s/n)");
-            string opcaoCerteza = Console.ReadLine();
+            Console.WriteLine("Menu 1-2 - Cadastrar Cliente");
+            Console.WriteLine("******************");
+            Console.WriteLine("");
 
-            if (opcaoCerteza.Equals("s"))
-            {
-                PlanetaRepository repoPlaneta = new PlanetaRepository();
-                repoPlaneta.Excluir(id, "planetas_del");
-            }
-            else
-            {
-                Console.WriteLine("Planeta NÂO foi excluido!");
-                Console.WriteLine("");
-            }
+            Clientes cliente = PerguntasPadraoCliente();
 
+            repoCliente.Incluir(cliente, "clientes_spi");
             Console.ReadKey();
-        } 
+        }
+        #endregion
+
+        #region CadastarPlaneta
+        private static void CadastarPlaneta()
+        {
+            PlanetaRepository repoPlaneta = new PlanetaRepository();
+
+
+            Console.WriteLine("Menu 1-1 - Cadastrar Planeta");
+            Console.WriteLine("******************");
+            Console.WriteLine("");
+
+            Planetas planeta = PerguntasPadraoPlaneta();
+
+            repoPlaneta.Incluir(planeta, "planetas_spi");
+            Console.ReadKey();
+        }
+        #endregion
+
+        #region AtualizaCliente
+        private static void AtualizaCliente()
+        {
+            string encerrar = "";
+            do
+            {
+                ClienteRepository repoCliente = new ClienteRepository();
+
+                Console.WriteLine("");
+                Console.WriteLine("Informe o nome do Cliente para atualizar:");
+                string nome = Console.ReadLine();
+
+                MostraConsultaClientePorNome(nome);
+
+                Console.WriteLine("Tem certeza que deseja atualizar? (s/n)");
+                string opcaoCerteza = Console.ReadLine();
+
+                if (opcaoCerteza.Equals("s"))
+                {
+                    Clientes cliente = PerguntasPadraoCliente();
+                    repoCliente.Atualizar(cliente, "clientes_upd");
+                }
+                else
+                {
+                    Console.WriteLine("Deseja sair? (s/n)");
+                    encerrar = Console.ReadLine();
+                }
+
+            } while (encerrar != "s");
+        }
         #endregion
 
         #region AtualizarPlaneta
@@ -267,50 +325,26 @@ namespace ProjetoViagens
         }
         #endregion
 
-        #region AtualizaCliente
-        private static void AtualizaCliente()
+        #region ExcluiPlaneta
+        private static void ExcluiPlaneta()
         {
-            string encerrar = "";
-            do
+            Console.WriteLine("Informe o ID do Planeta para excluir:");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Tem certeza que deseja excluir? (s/n)");
+            string opcaoCerteza = Console.ReadLine();
+
+            if (opcaoCerteza.Equals("s"))
             {
-                ClienteRepository repoCliente = new ClienteRepository();
-
+                PlanetaRepository repoPlaneta = new PlanetaRepository();
+                repoPlaneta.Excluir(id, "planetas_del");
+            }
+            else
+            {
+                Console.WriteLine("Planeta NÂO foi excluido!");
                 Console.WriteLine("");
-                Console.WriteLine("Informe o nome do Cliente para atualizar:");
-                string nome = Console.ReadLine();
+            }
 
-                MostraConsultaClientePorNome(nome);
-
-                Console.WriteLine("Tem certeza que deseja atualizar? (s/n)");
-                string opcaoCerteza = Console.ReadLine();
-
-                if (opcaoCerteza.Equals("s"))
-                {
-                    Clientes cliente = PerguntasPadraoCliente();
-                    repoCliente.Atualizar(cliente, "clientes_upd");
-                }
-                else
-                {
-                    Console.WriteLine("Deseja sair? (s/n)");
-                    encerrar = Console.ReadLine();
-                }
-
-            } while (encerrar != "s");
-        } 
-        #endregion
-
-        #region CadastrarCliente
-        private static void CadastrarCliente()
-        {
-            ClienteRepository repoCliente = new ClienteRepository();
-
-            Console.WriteLine("Menu 1-2 - Cadastrar Cliente");
-            Console.WriteLine("******************");
-            Console.WriteLine("");
-
-            Clientes cliente = PerguntasPadraoCliente();
-
-            repoCliente.Incluir(cliente, "clientes_spi");
             Console.ReadKey();
         }
         #endregion
@@ -350,13 +384,13 @@ namespace ProjetoViagens
             cliente.Respira = respira.ToLower() == "s" ? true : false;
 
             return cliente;
-        } 
+        }
         #endregion
 
         #region MenuConsultaOpcao
         private static void MenuConsultaOpcao(string nomeEntidade)
         {
-            string opcaoConsultar =  MenuConsultarOpcao.ShowMenuOpcaoConsultar(nomeEntidade);
+            string opcaoConsultar = MenuConsultarOpcao.ShowMenuOpcaoConsultar(nomeEntidade);
             if (opcaoConsultar == "1")
             {
                 if (nomeEntidade.ToLower() == "planeta")
@@ -398,7 +432,7 @@ namespace ProjetoViagens
                 Console.ReadKey();
             }
             else if (opcaoConsultar == "2")
-            {               
+            {
 
                 if (nomeEntidade.ToLower() == "planeta")
                 {
@@ -454,7 +488,7 @@ namespace ProjetoViagens
         }
         #endregion
 
-        #region         private static void MostraConsultaClientePorNome(string nome)
+        #region private static void MostraConsultaClientePorNome(string nome)
 
         private static void MostraConsultaClientePorNome(string nome)
         {
@@ -466,7 +500,7 @@ namespace ProjetoViagens
             Console.WriteLine("Cor: {0} | {1} Braço(s) | {2} Perna(s) | {3} Cabeça(s)", cliente.Cor, cliente.QtdBracos, cliente.QtdPernas, cliente.QtdCabecas);
             Console.WriteLine("Respira? {0}", cliente.Respira == true ? "Sim" : "Não");
             Console.WriteLine("*********************************************************************");
-        } 
+        }
         #endregion
 
         #region MostraConsultaPorNome
@@ -480,23 +514,6 @@ namespace ProjetoViagens
             Console.WriteLine("Descrição: {0}", planeta.Descricao);
             Console.WriteLine("Possui Oxiênio? {0}", planeta.PossuiOxigenio == true ? "Sim" : "Não");
             Console.WriteLine("*********************************************************************");
-        }
-        #endregion
-
-        #region CadastarPlaneta
-        private static void CadastarPlaneta()
-        {
-            PlanetaRepository repoPlaneta = new PlanetaRepository();
-
-
-            Console.WriteLine("Menu 1-1 - Cadastrar Planeta");
-            Console.WriteLine("******************");
-            Console.WriteLine("");
-
-            Planetas planeta = PerguntasPadraoPlaneta();
-
-            repoPlaneta.Incluir(planeta, "planetas_spi");
-            Console.ReadKey();
         }
         #endregion
 
@@ -521,7 +538,7 @@ namespace ProjetoViagens
             planeta.PossuiOxigenio = possuiOxigenio.ToLower() == "s" ? true : false;
 
             return planeta;
-        } 
+        }
         #endregion
 
     }
