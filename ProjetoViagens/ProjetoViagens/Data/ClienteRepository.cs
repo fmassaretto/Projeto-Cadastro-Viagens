@@ -13,12 +13,7 @@ namespace ProjetoViagens.Data
     {
         public override Clientes Atualizar(Clientes entidade, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Id", entidade.Id);
             comando.Parameters.AddWithValue("@Nome", entidade.Nome);
@@ -46,12 +41,7 @@ namespace ProjetoViagens.Data
 
         public override void Excluir(int id, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Id", id);
 
@@ -69,12 +59,7 @@ namespace ProjetoViagens.Data
 
         public override Clientes Incluir(Clientes entidade, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-          
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Nome", entidade.Nome);
             comando.Parameters.AddWithValue("@Especie", entidade.Especie);
@@ -101,14 +86,9 @@ namespace ProjetoViagens.Data
         public override List<Clientes> Listar(string procedure)
         {
             List<Clientes> listaClientes = new List<Clientes>();
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
 
-            
+            SqlCommand comando = GetSqlCommand(procedure);
 
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
             SqlDataReader reader = comando.ExecuteReader();
 
             while (reader.Read())
@@ -131,12 +111,7 @@ namespace ProjetoViagens.Data
 
         public override Clientes Obter(string nome, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-           
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Nome", nome);
             SqlDataReader reader = comando.ExecuteReader();

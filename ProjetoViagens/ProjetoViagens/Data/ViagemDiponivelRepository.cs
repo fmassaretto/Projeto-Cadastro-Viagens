@@ -52,7 +52,7 @@ namespace ProjetoViagens.Data
 
         public override ViagensDispo Incluir(ViagensDispo entidade, string procedure)
         {
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@PlanetaOrigem", entidade.PlanetaOrigem);
             comando.Parameters.AddWithValue("@PlanetaDestino", entidade.PlanetaDestino);
@@ -75,7 +75,7 @@ namespace ProjetoViagens.Data
 
         public override List<ViagensDispo> Listar(string procedure)
         {
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
 
             List<ViagensDispo> listaViagens = new List<ViagensDispo>();
 
@@ -102,7 +102,7 @@ namespace ProjetoViagens.Data
 
         public List<ViagensDispo> ObterViagens(string nome, string procedure)
         {
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
 
             List<ViagensDispo> listaViagens = new List<ViagensDispo>();
 

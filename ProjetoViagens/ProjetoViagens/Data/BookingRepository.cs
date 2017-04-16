@@ -24,7 +24,7 @@ namespace ProjetoViagens.Data
         public override ViagemCliente Incluir(ViagemCliente entidade, string procedure)
         {
 
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@IdViagemDispo", entidade.IdViagemDispo);
             comando.Parameters.AddWithValue("@IdCliente", entidade.IdCliente);
@@ -60,7 +60,7 @@ namespace ProjetoViagens.Data
 
         public override List<ViagemCliente> Listar(string procedure)
         {
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
             List<ViagemCliente> listaViagensClinte = new List<ViagemCliente>();
             SqlDataReader reader = comando.ExecuteReader();
 
@@ -92,7 +92,7 @@ namespace ProjetoViagens.Data
         public List<ViagemCliente> ObterPorId(int id, string procedure)
         {
 
-            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlCommand comando = GetSqlCommand(procedure);
             List<ViagemCliente> listaViagensClinte = new List<ViagemCliente>();
 
             comando.Parameters.AddWithValue("@Id", id);
