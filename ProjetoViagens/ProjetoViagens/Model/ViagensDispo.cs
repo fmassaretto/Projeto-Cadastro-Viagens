@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjetoViagens.Model
 {
-    class ViagensDispo
+    public class ViagensDispo
     {
         public int Id { get; set; }
         public string PlanetaOrigem { get; set; }
