@@ -28,8 +28,24 @@ namespace ProjetoViagens.Data
 
             comando.Parameters.AddWithValue("@IdViagemDispo", entidade.IdViagemDispo);
             comando.Parameters.AddWithValue("@IdCliente", entidade.IdCliente);
+            comando.Parameters.AddWithValue("@IdTransporte", entidade.IdTransporte);
 
             SqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                entidade.clientes.Id = Convert.ToInt32(reader["Id"]);
+                entidade.clientes.Nome = Convert.ToString(reader["NomeCliente"]);
+                entidade.clientes.Documento = Convert.ToString(reader["Documento"]);
+                entidade.clientes.Respira = Convert.ToBoolean(reader["Respira"]);
+                entidade.CodigoReserva = Convert.ToInt32(reader["CodigoReserva"]);
+                entidade.viagemDispo.PlanetaOrigem = Convert.ToString(reader["PlanetaOrigem"]);
+                entidade.viagemDispo.PlanetaDestino = Convert.ToString(reader["PlanetaDestino"]);
+                entidade.viagemDispo.Valor = Convert.ToInt32(reader["Valor"]);
+                entidade.viagemDispo.Tempo= Convert.ToInt32(reader["Tempo"]);
+                entidade.transportes.Nome = Convert.ToString(reader["NomeTransporte"]);
+                entidade.transportes.Terreno = Convert.ToString(reader["Terreno"]);         
+            }
 
             while (reader.Read())
             {
@@ -59,7 +75,9 @@ namespace ProjetoViagens.Data
                     reader.GetString(5),
                     reader.GetString(6),
                     reader.GetInt32(7),
-                    reader.GetInt32(8)
+                    reader.GetInt32(8),
+                    reader.GetString(9),
+                    reader.GetString(10)
                 ));
             }
 
@@ -92,7 +110,9 @@ namespace ProjetoViagens.Data
                     reader.GetString(5),
                     reader.GetString(6),
                     reader.GetInt32(7),
-                    reader.GetInt32(8)
+                    reader.GetInt32(8),
+                    reader.GetString(9),
+                    reader.GetString(10)
                 ));
             }
 
