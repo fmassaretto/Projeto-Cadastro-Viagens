@@ -50,7 +50,10 @@
     <Compile Include="Data\ClienteRepository.cs" />
     <Compile Include="Data\PlanetaRepository.cs" />
     <Compile Include="Data\Repository.cs" />
+    <Compile Include="Data\TransporteRepository.cs" />
     <Compile Include="Data\ViagemDiponivelRepository.cs" />
+    <Compile Include="Logs\LogCliente.cs" />
+    <Compile Include="Logs\LogErro.cs" />
     <Compile Include="Menus\HeaderAbstract.cs" />
     <Compile Include="Menus\MenuAtualizar.cs" />
     <Compile Include="Menus\MenuBooking.cs" />
@@ -68,11 +71,15 @@
     <Compile Include="Model\ViagensDispo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Telas\MostrarConsulta.cs" />
+    <Compile Include="Telas\TelaConsultar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Logs\Erro\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
