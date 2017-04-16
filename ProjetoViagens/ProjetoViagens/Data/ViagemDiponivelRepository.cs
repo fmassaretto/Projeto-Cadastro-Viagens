@@ -13,12 +13,41 @@ namespace ProjetoViagens.Data
     {
         public override ViagensDispo Atualizar(ViagensDispo entidade, string procedure)
         {
-            throw new NotImplementedException();
+            SqlCommand comando = GetSqlCommand(procedure);
+            comando.Parameters.AddWithValue("@Id",entidade.Id);
+            comando.Parameters.AddWithValue("@PlanetaOrigem", entidade.PlanetaOrigem);
+            comando.Parameters.AddWithValue("@PlanetaDestino", entidade.PlanetaDestino);
+            comando.Parameters.AddWithValue("@Valor", entidade.Valor);
+            comando.Parameters.AddWithValue("@Tempo", entidade.Tempo);
+
+            SqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine("");
+                Console.WriteLine("********************************");
+                Console.WriteLine(reader["msgSucesso"]);
+                Console.WriteLine("********************************");
+                Console.WriteLine("");
+            }
+            return entidade;
         }
 
         public override void Excluir(int Id, string procedure)
         {
-            throw new NotImplementedException();
+            SqlCommand comando = GetSqlCommand(procedure);
+            comando.Parameters.AddWithValue("@Id", Id);
+
+            SqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine("");
+                Console.WriteLine("********************************");
+                Console.WriteLine(reader["msgSucesso"]);
+                Console.WriteLine("********************************");
+                Console.WriteLine("");
+            }
         }
 
         public override ViagensDispo Incluir(ViagensDispo entidade, string procedure)
