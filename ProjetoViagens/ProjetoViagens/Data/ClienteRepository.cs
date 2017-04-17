@@ -132,5 +132,29 @@ namespace ProjetoViagens.Data
 
             return cliente;
         }
+
+        public Clientes ObterPorId(int id, string procedure)
+        {
+            SqlCommand comando = GetSqlCommand(procedure);
+
+            comando.Parameters.AddWithValue("@Id", id);
+            SqlDataReader reader = comando.ExecuteReader();
+
+            Clientes cliente = new Clientes();
+            while (reader.Read())
+            {
+                cliente.Id = reader.GetInt32(0);
+                cliente.Nome = reader.GetString(1);
+                cliente.Especie = reader.GetString(2);
+                cliente.Documento = reader.GetString(3);
+                cliente.Cor = reader.GetString(4);
+                cliente.QtdBracos = reader.GetInt32(5);
+                cliente.QtdPernas = reader.GetInt32(6);
+                cliente.QtdCabecas = reader.GetInt32(7);
+                cliente.Respira = reader.GetBoolean(8);
+            }
+
+            return cliente;
+        }
     }
 }
