@@ -13,7 +13,25 @@ namespace ProjetoViagens.Data
     {
         public override ViagemCliente Atualizar(ViagemCliente entidade, string procedure)
         {
-            throw new NotImplementedException();
+            SqlCommand comando = GetSqlCommand(procedure);
+
+            comando.Parameters.AddWithValue("@Id", entidade.CodigoReserva);
+            comando.Parameters.AddWithValue("@IdViagemDispo", entidade.IdViagemDispo);
+            comando.Parameters.AddWithValue("@IdCliente", entidade.IdCliente);
+            comando.Parameters.AddWithValue("@IdTransporte", entidade.IdTransporte);
+
+            SqlDataReader reader = comando.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine("");
+                Console.WriteLine("********************************");
+                Console.WriteLine(reader["msgSucesso"]);
+                Console.WriteLine("********************************");
+                Console.WriteLine("");
+            }
+
+            return entidade;
         }
 
         public override void Excluir(int Id, string procedure)
@@ -44,11 +62,7 @@ namespace ProjetoViagens.Data
                 entidade.viagemDispo.Valor = Convert.ToInt32(reader["Valor"]);
                 entidade.viagemDispo.Tempo= Convert.ToInt32(reader["Tempo"]);
                 entidade.transportes.Nome = Convert.ToString(reader["NomeTransporte"]);
-                entidade.transportes.Terreno = Convert.ToString(reader["Terreno"]);         
-            }
-
-            while (reader.Read())
-            {
+                entidade.transportes.Terreno = Convert.ToString(reader["Terreno"]);
                 Console.WriteLine("");
                 Console.WriteLine("********************************");
                 Console.WriteLine(reader["msgSucesso"]);
