@@ -20,6 +20,9 @@ namespace ProjetoViagens.Menus
             Console.WriteLine("******************");
             Console.WriteLine("5 - Fazer Booking da Viagem");
             Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("6 - Exibir o log de erros");
+            Console.WriteLine("");
             Console.WriteLine("x - Encerrar");
             return Console.ReadLine();
         }

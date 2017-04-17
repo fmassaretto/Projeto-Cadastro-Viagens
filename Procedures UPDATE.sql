@@ -13,7 +13,7 @@ END
 
 
 
-CREATE PROCEDURE clientes_upd @id INT, 
+ALTER PROCEDURE clientes_upd @Id INT, 
 	@Nome VARCHAR(200), 
 	@Especie VARCHAR(100), 
 	@Documento VARCHAR(100), 
@@ -33,6 +33,35 @@ BEGIN
 END
 
 
-EXEC planetas_upd 13, 'Planeta TZ564', 'Maior Planeta da galaxia T32, possui condições de vida.', 1
+GO
+
+CREATE PROCEDURE transprte_upd @Id INT,
+	@Nome VARCHAR(50),
+	@Terreno VARCHAR(50)
+AS
+BEGIN
+	UPDATE Transportes
+	SET Nome = @Nome, Terreno = @Terreno
+	WHERE Id = @Id
+
+	SELECT 'Campo(s) de Transporte Atualizado com Sucesso!' AS msgSucesso
+END
+
+GO
+
+
+ALTER PROCEDURE viagensDispo_upd @Id INT,
+	@PlanetaOrigem VARCHAR(50),
+	@PlanetaDestino VARCHAR(50),
+	@Valor INT,
+	@Tempo INT
+AS
+BEGIN
+	UPDATE ViagensDisponiveis
+	SET PlanetaOrigem = @PlanetaOrigem, PlanetaDestino = @PlanetaDestino, Valor = @Valor, Tempo = @Tempo
+	WHERE Id = @Id
+
+	SELECT 'Campo(s) de Viagens Disponíveis Atualizado com Sucesso!' AS msgSucesso
+END
 
 SELECT * FROM Planetas

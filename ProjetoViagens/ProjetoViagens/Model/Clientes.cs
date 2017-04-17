@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjetoViagens.Model
 {
-    class Clientes : IEspecies
+    public class Clientes : IEspecies
     {
         public int Id { get; set; }
         public string Nome { get; set; }

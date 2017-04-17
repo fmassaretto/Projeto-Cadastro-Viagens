@@ -9,16 +9,15 @@ using System.Threading.Tasks;
 
 namespace ProjetoViagens.Data
 {
-    class ViagemDiponivelRepository : CrudAbstract<ViagensDispo>
+    class TransporteRepository : CrudAbstract<Transportes>
     {
-        public override ViagensDispo Atualizar(ViagensDispo entidade, string procedure)
+        public override Transportes Atualizar(Transportes entidade, string procedure)
         {
             SqlCommand comando = GetSqlCommand(procedure);
-            comando.Parameters.AddWithValue("@Id",entidade.Id);
-            comando.Parameters.AddWithValue("@PlanetaOrigem", entidade.PlanetaOrigem);
-            comando.Parameters.AddWithValue("@PlanetaDestino", entidade.PlanetaDestino);
-            comando.Parameters.AddWithValue("@Valor", entidade.Valor);
-            comando.Parameters.AddWithValue("@Tempo", entidade.Tempo);
+            
+            comando.Parameters.AddWithValue("@Id", entidade.Id);
+            comando.Parameters.AddWithValue("@Nome", entidade.Nome);
+            comando.Parameters.AddWithValue("@Terreno", entidade.Terreno);
 
             SqlDataReader reader = comando.ExecuteReader();
 
@@ -30,6 +29,7 @@ namespace ProjetoViagens.Data
                 Console.WriteLine("********************************");
                 Console.WriteLine("");
             }
+
             return entidade;
         }
 
@@ -50,14 +50,12 @@ namespace ProjetoViagens.Data
             }
         }
 
-        public override ViagensDispo Incluir(ViagensDispo entidade, string procedure)
+        public override Transportes Incluir(Transportes entidade, string procedure)
         {
             SqlCommand comando = GetSqlCommand(procedure);
-
-            comando.Parameters.AddWithValue("@PlanetaOrigem", entidade.PlanetaOrigem);
-            comando.Parameters.AddWithValue("@PlanetaDestino", entidade.PlanetaDestino);
-            comando.Parameters.AddWithValue("@Valor", entidade.Valor);
-            comando.Parameters.AddWithValue("@Tempo", entidade.Tempo);
+           
+            comando.Parameters.AddWithValue("@Nome", entidade.Nome);
+            comando.Parameters.AddWithValue("@Terreno", entidade.Terreno);
 
             SqlDataReader reader = comando.ExecuteReader();
 
@@ -73,55 +71,41 @@ namespace ProjetoViagens.Data
             return entidade;
         }
 
-        public override List<ViagensDispo> Listar(string procedure)
+        public override List<Transportes> Listar(string procedure)
         {
             SqlCommand comando = GetSqlCommand(procedure);
-
-            List<ViagensDispo> listaViagens = new List<ViagensDispo>();
-
             SqlDataReader reader = comando.ExecuteReader();
+
+            List<Transportes> listaTransportes = new List<Transportes>();
 
             while (reader.Read())
             {
-                listaViagens.Add(new ViagensDispo(
-                reader.GetInt32(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetInt32(3),
-                reader.GetInt32(4)
+                listaTransportes.Add(new Transportes(
+                    reader.GetInt32(0),
+                    reader.GetString(1),
+                    reader.GetString(2)
                 ));
             }
 
-            return listaViagens;
+            return listaTransportes;
         }
 
-        public override ViagensDispo Obter(string nome, string procedure)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<ViagensDispo> ObterViagens(string nome, string procedure)
+        public override Transportes Obter(string nome, string procedure)
         {
             SqlCommand comando = GetSqlCommand(procedure);
-
-            List<ViagensDispo> listaViagens = new List<ViagensDispo>();
-
             comando.Parameters.AddWithValue("@Nome", nome);
             SqlDataReader reader = comando.ExecuteReader();
 
-            ViagensDispo viagem = new ViagensDispo();
+            Transportes transporte = new Transportes();
+
             while (reader.Read())
             {
-                listaViagens.Add(new ViagensDispo(
-                reader.GetInt32(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetInt32(3),
-                reader.GetInt32(4)
-                ));
+                transporte.Id = reader.GetInt32(0);
+                transporte.Nome = reader.GetString(1);
+                transporte.Terreno = reader.GetString(2);
             }
 
-            return listaViagens;
+            return transporte;
         }
     }
 }

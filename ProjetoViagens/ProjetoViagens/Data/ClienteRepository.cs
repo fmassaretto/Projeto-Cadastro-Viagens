@@ -13,12 +13,7 @@ namespace ProjetoViagens.Data
     {
         public override Clientes Atualizar(Clientes entidade, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Id", entidade.Id);
             comando.Parameters.AddWithValue("@Nome", entidade.Nome);
@@ -46,12 +41,7 @@ namespace ProjetoViagens.Data
 
         public override void Excluir(int id, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Id", id);
 
@@ -69,12 +59,7 @@ namespace ProjetoViagens.Data
 
         public override Clientes Incluir(Clientes entidade, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-          
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Nome", entidade.Nome);
             comando.Parameters.AddWithValue("@Especie", entidade.Especie);
@@ -101,14 +86,9 @@ namespace ProjetoViagens.Data
         public override List<Clientes> Listar(string procedure)
         {
             List<Clientes> listaClientes = new List<Clientes>();
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
 
-            
+            SqlCommand comando = GetSqlCommand(procedure);
 
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
             SqlDataReader reader = comando.ExecuteReader();
 
             while (reader.Read())
@@ -131,12 +111,7 @@ namespace ProjetoViagens.Data
 
         public override Clientes Obter(string nome, string procedure)
         {
-            SqlCommand comando = new SqlCommand();
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.CommandText = procedure;
-           
-            comando.Connection = base.GetConnection();
-            comando.Connection.Open();
+            SqlCommand comando = GetSqlCommand(procedure);
 
             comando.Parameters.AddWithValue("@Nome", nome);
             SqlDataReader reader = comando.ExecuteReader();
@@ -154,6 +129,30 @@ namespace ProjetoViagens.Data
                 cliente.QtdCabecas = reader.GetInt32(7);
                 cliente.Respira = reader.GetBoolean(8);
             }           
+
+            return cliente;
+        }
+
+        public Clientes ObterPorId(int id, string procedure)
+        {
+            SqlCommand comando = GetSqlCommand(procedure);
+
+            comando.Parameters.AddWithValue("@Id", id);
+            SqlDataReader reader = comando.ExecuteReader();
+
+            Clientes cliente = new Clientes();
+            while (reader.Read())
+            {
+                cliente.Id = reader.GetInt32(0);
+                cliente.Nome = reader.GetString(1);
+                cliente.Especie = reader.GetString(2);
+                cliente.Documento = reader.GetString(3);
+                cliente.Cor = reader.GetString(4);
+                cliente.QtdBracos = reader.GetInt32(5);
+                cliente.QtdPernas = reader.GetInt32(6);
+                cliente.QtdCabecas = reader.GetInt32(7);
+                cliente.Respira = reader.GetBoolean(8);
+            }
 
             return cliente;
         }

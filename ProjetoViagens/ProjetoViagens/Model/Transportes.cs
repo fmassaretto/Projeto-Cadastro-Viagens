@@ -6,10 +6,22 @@ using System.Threading.Tasks;
 
 namespace ProjetoViagens.Model
 {
-    class Transportes
+    public class Transportes
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Terreno { get; set; }
+
+        public Transportes(int id, string nome, string terreno)
+        {
+            this.Id = id;
+            this.Nome = nome;
+            this.Terreno = terreno;
+        }
+
+        public Transportes()
+        {
+
+        }
     }
 }
