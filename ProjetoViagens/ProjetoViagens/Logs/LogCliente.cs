@@ -26,7 +26,7 @@ namespace ProjetoViagens.Logs
 
             string logMsg = date + " - Cliente: " + viagemCliente.clientes.Nome + " comprou passagem De: " + viagemCliente.viagemDispo.PlanetaOrigem +
                 " - Para: " + viagemCliente.viagemDispo.PlanetaDestino + ",\n no valor de: " + 
-                viagemCliente.viagemDispo.Valor + ", distancia de: " + viagemCliente.viagemDispo.Tempo + " Anos-Luz - Por: " + viagemCliente.transportes.Terreno;
+                viagemCliente.viagemDispo.Valor + ", distancia de: " + viagemCliente.viagemDispo.Tempo + " Anos-Luz - Meio de Transporte: " + viagemCliente.transportes.Nome;
 
             try
             {
@@ -40,8 +40,9 @@ namespace ProjetoViagens.Logs
             }
             catch (Exception ex)
             {
-                //Error log
-                throw;
+                LogErro.ExecuteLogErro("Erro ao criar log de tickets do cliente ID: " + viagemCliente.IdCliente.ToString() +
+                    ". StackTrace: " + ex.StackTrace + " Mensagem de erro: " + ex.Message);
+                Console.WriteLine("Erro ao criar log do cliente, consulte o log de erro para mais detalhes.");
             }                       
         }
     }
