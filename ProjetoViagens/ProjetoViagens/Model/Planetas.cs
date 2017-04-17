@@ -13,6 +13,17 @@ namespace ProjetoViagens.Model
         public string Descricao { get; set; }
         public bool PossuiOxigenio { get; set; }
 
+        public override string ToString()
+        {
+            var retorno = string.Empty;
+            retorno += "#Id: " + this.Id.ToString();
+            retorno += "#Nome: " + this.Nome;
+            retorno += "#Descrição: " + this.Descricao;
+            retorno += "#Oxigenio: " + (this.PossuiOxigenio == true ? "Sim" : "Não");
+
+            return retorno;
+        }
+
         public Planetas(int id, string nome, string descr, bool possuiOx)
         {
             this.Id = id;

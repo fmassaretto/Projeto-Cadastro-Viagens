@@ -23,7 +23,16 @@ namespace ProjetoViagens.Data
 
         public override ViagensDispo Incluir(ViagensDispo entidade, string procedure)
         {
-            throw new NotImplementedException();
+            SqlCommand comando = base.GetSqlCommand(procedure);
+            SqlDataReader reader = comando.ExecuteReader();
+
+
+
+            while (reader.Read())
+            {
+
+            }
+            return entidade;
         }
 
         public override List<ViagensDispo> Listar(string procedure)

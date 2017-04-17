@@ -1,4 +1,5 @@
-﻿using ProjetoViagens.Data;
+﻿using Newtonsoft.Json;
+using ProjetoViagens.Data;
 using ProjetoViagens.DB.Base;
 using ProjetoViagens.Menus;
 using ProjetoViagens.Model;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +20,14 @@ namespace ProjetoViagens
     {
         static void Main(string[] args)
         {
+            //RunAsync().Wait();
+            //Console.ReadKey();
+            var lista = ObterInformacoes();
+            foreach (var item in lista)
+            {
+                Console.WriteLine(item.Nome);
+            }
+            Console.ReadKey();
             string opcaoMenuPrincipal = "";
 
             do
@@ -153,6 +164,62 @@ namespace ProjetoViagens
             } while (opcaoMenuPrincipal.ToLower() != "x");
 
         }
+
+        private static List<Planetas> ObterInformacoes()
+        {
+            var api = new ClientApi();
+            var planeta = new Planetas();
+            var parametros = JsonConvert.SerializeObject(planeta);
+            return api.Get<Planetas>("/api/v1/Planeta");
+        }
+
+        private static Planetas ObterPorId(int id)
+        {
+            var api = new ClientApi();
+            return api.Get<Planetas>("/api/v1/Planeta", id);
+        }
+
+        private static void Inserir(Planetas planeta)
+        {
+            var parametros = JsonConvert.SerializeObject(planeta);
+            var api = new ClientApi();
+            api.Post("/api/v1/Planeta", parametros);
+        }
+
+        //static async Task RunAsync()
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+        //        client.BaseAddress = new System.Uri("http://localhost:62855/");
+        //        client.DefaultRequestHeaders.Accept.Clear();
+        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //        HttpResponseMessage response = await client.GetAsync("api/v1/Planeta/1");
+        //        if (response.IsSuccessStatusCode)
+        //        {  //GET
+        //            Planetas planeta = await response.Content.ReadAsAsync<Planetas>();
+        //            Console.WriteLine("{0}\tDesc:{1}\t{2}", planeta.Nome, planeta.Descricao, planeta.PossuiOxigenio);
+        //            Console.WriteLine("Produto acessado e exibido.  Tecle algo para incluir um novo produto.");
+        //            Console.ReadKey();
+        //        }
+        //        //POST
+        //        var planetaPost = new Planetas() { Nome = "Planeta azul", Descricao = "asdasdasdasd", PossuiOxigenio = true };
+        //        response = await client.PostAsJsonAsync("api/v1/Planeta", planetaPost);
+        //        Console.WriteLine("Planeta verde incluído. Tecle algo para atualizar o preço do produto.");
+        //        Console.ReadKey();
+        //        if (response.IsSuccessStatusCode)
+        //        {   //PUT
+        //            Uri chaUrl = response.Headers.Location;
+        //            planetaPost.Descricao = "Bleblebleble";   // atualiza a descrição do planeta atualizado
+        //            response = await client.PutAsJsonAsync(chaUrl, planetaPost);
+        //            Console.WriteLine("Descrição do planeta atualizado. Tecle algo para excluir o produto");
+        //            Console.ReadKey();
+        //            //DELETE
+        //            response = await client.DeleteAsync(chaUrl);
+        //            Console.WriteLine("Planeta deletado");
+        //            Console.ReadKey();
+        //        }
+        //    }
+        //}
 
         private static void ConsultaBookingPorId()
         {
@@ -362,15 +429,22 @@ namespace ProjetoViagens
                 if (nomeEntidade.ToLower() == "planeta")
                 {
                     // CONSULTA TODOS PLANETAS
-                    PlanetaRepository repoPlaneta = new PlanetaRepository();
-                    foreach (var item in repoPlaneta.Listar("planetasTodos_sps"))
+                    Planetas planeta = new Planetas();
+                    var listaPlaneta = ObterInformacoes();
+
+                    foreach (var item in listaPlaneta)
                     {
+                        
+                        planeta.Id = item.Id;
+                        planeta.Nome = item.Nome;
+                        planeta.Descricao = item.Descricao;
+                        planeta.PossuiOxigenio = item.PossuiOxigenio;
                         Console.WriteLine("");
-                        Console.WriteLine("ID: {0} - Planeta: {1}", item.Id, item.Nome);
-                        Console.WriteLine("Descrição: {0}", item.Descricao);
-                        Console.WriteLine("Possui Oxiênio? {0}", item.PossuiOxigenio == true ? "Sim" : "Não");
+                        Console.WriteLine(planeta.ToString()); 
                         Console.WriteLine("*********************************************************************");
                     }
+                    
+                    Console.ReadKey();
                 }
                 else if (nomeEntidade.ToLower() == "cliente")
                 {
@@ -495,7 +569,9 @@ namespace ProjetoViagens
 
             Planetas planeta = PerguntasPadraoPlaneta();
 
-            repoPlaneta.Incluir(planeta, "planetas_spi");
+            Inserir(planeta);
+
+            //repoPlaneta.Incluir(planeta, "planetas_spi");
             Console.ReadKey();
         }
         #endregion
